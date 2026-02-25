@@ -1,0 +1,8 @@
+bin/
+obj/
+library.db
+.vs/
+*.user
+*.suo
+*.log
+.env
