@@ -1,62 +1,88 @@
 ﻿using backend.DTOs;
+using backend.Modals;
 using backend.Services.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
 
-namespace backend.Controllers
+[Authorize]
+[ApiController]
+[Route("api/[controller]")]
+public class BooksController : ControllerBase
 {
-    //[Authorize]
-    [ApiController]
-    [Route("api/[controller]")]
-    public class BooksController : ControllerBase
+    private readonly IBookService _bookService;
+
+    public BooksController(IBookService bookService)
     {
-        private readonly IBookService _bookService;
+        _bookService = bookService;
+    }
 
-        public BooksController(IBookService bookService)
+    private int GetUserId()
+    {
+        var idValue = User.FindFirstValue(ClaimTypes.NameIdentifier);
+        if (string.IsNullOrEmpty(idValue) || !int.TryParse(idValue, out var id))
         {
-            _bookService = bookService;
+            throw new UnauthorizedAccessException("User id claim is missing or invalid.");
         }
 
-        [HttpGet]
-        public async Task<IActionResult> GetAll()
-        {
-            var books = await _bookService.GetAllAsync();
-            return Ok(books);
-        }
+        return id;
+    }
 
-        [HttpPost]
-        public async Task<IActionResult> Create(BookDto dto)
-        {
-            await _bookService.CreateAsync(dto);
-            return Ok(new { message = "Book created successfully" });
-        }
+    [HttpGet("{id}")]
+    public async Task<IActionResult> GetAll()
+    {
+        var userId = GetUserId();
 
-        [HttpPut("{id}")]
-        public async Task<IActionResult> Update(int id, BookDto dto)
-        {
-            try
-            {
-                await _bookService.UpdateAsync(id, dto);
-                return Ok(new { message = "Book updated successfully" });
-            }
-            catch (Exception ex)
-            {
-                return NotFound(new { error = ex.Message });
-            }
-        }
+        var books = await _bookService.GetAllAsync(userId);
 
-        [HttpDelete("{id}")]
-        public async Task<IActionResult> Delete(int id)
+        return Ok(books);
+    }
+
+    [HttpGet]
+    public async Task<IActionResult> GetAllBooks()
+    {
+
+        var books = await _bookService.GetAllAsync();
+
+        return Ok(books);
+    }
+
+    [HttpPost]
+    public async Task<IActionResult> Create(BookDto dto)
+    {
+        var userId = GetUserId();
+
+        await _bookService.CreateAsync(dto, userId);
+
+        return Ok(new
         {
-            try
-            {
-                await _bookService.DeleteAsync(id);
-                return Ok(new { message = "Book deleted successfully" });
-            }
-            catch (Exception ex)
-            {
-                return NotFound(new { error = ex.Message });
-            }
-        }
+            message = "Book created successfully"
+        });
+    }
+
+    [HttpPut("{id}")]
+    public async Task<IActionResult> Update(int id, BookDto dto)
+    {
+        var userId = GetUserId();
+
+        await _bookService.UpdateAsync(id, dto, userId);
+
+        return Ok(new
+        {
+            message = "Book updated successfully"
+        });
+    }
+
+    [HttpDelete("{id}")]
+    public async Task<IActionResult> Delete(int id)
+    {
+        var userId = GetUserId();
+
+        await _bookService.DeleteAsync(id, userId);
+
+        return Ok(new
+        {
+            message = "Book deleted successfully"
+        });
     }
 }

@@ -29,6 +29,18 @@ namespace backend.Repositories
         {
             return await _context.Books.ToListAsync();
         }
+        public async Task<List<Book>> GetAllAsync(int userId)
+        {
+            return await _context.Books
+                .Where(b => b.UserId == userId)
+                .ToListAsync();
+        }
+
+        public async Task<Book?> GetByIdAsync(int id, int userId)
+        {
+            return await _context.Books
+                .FirstOrDefaultAsync(b => b.Id == id && b.UserId == userId);
+        }
 
         public async Task<Book?> GetByIdAsync(int id)
         {

@@ -17,21 +17,25 @@ namespace backend.Services
         public async Task<List<Book>> GetAllAsync()
             => await _bookRepository.GetAllAsync();
 
-        public async Task CreateAsync(BookDto dto)
+        public async Task<List<Book>> GetAllAsync(int userId)
+            => await _bookRepository.GetAllAsync(userId);
+
+        public async Task CreateAsync(BookDto dto, int userId)
         {
             var book = new Book
             {
                 Title = dto.Title,
                 Author = dto.Author,
-                Description = dto.Description
+                Description = dto.Description,
+                UserId = userId
             };
 
             await _bookRepository.AddAsync(book);
         }
 
-        public async Task UpdateAsync(int id, BookDto dto)
+        public async Task UpdateAsync(int id, BookDto dto, int userId)
         {
-            var book = await _bookRepository.GetByIdAsync(id)
+            var book = await _bookRepository.GetByIdAsync(id, userId)
                        ?? throw new Exception("Book not found");
 
             book.Title = dto.Title;
@@ -42,9 +46,9 @@ namespace backend.Services
             await _bookRepository.UpdateAsync(book);
         }
 
-        public async Task DeleteAsync(int id)
+        public async Task DeleteAsync(int id, int userId)
         {
-            var book = await _bookRepository.GetByIdAsync(id)
+            var book = await _bookRepository.GetByIdAsync(id, userId)
                        ?? throw new Exception("Book not found");
 
             await _bookRepository.DeleteAsync(book);

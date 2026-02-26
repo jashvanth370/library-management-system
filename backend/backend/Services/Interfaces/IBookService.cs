@@ -6,8 +6,9 @@ namespace backend.Services.Interfaces
     public interface IBookService
     {
         Task<List<Book>> GetAllAsync();
-        Task CreateAsync(BookDto dto);
-        Task UpdateAsync(int id, BookDto dto);
-        Task DeleteAsync(int id);
+        Task<List<Book>> GetAllAsync(int userId);
+        Task CreateAsync(BookDto dto, int userId);
+        Task UpdateAsync(int id, BookDto dto, int userId);
+        Task DeleteAsync(int id, int userId);
     }
 }
