@@ -28,8 +28,8 @@ public class BooksController : ControllerBase
         return id;
     }
 
-    [HttpGet("{id}")]
-    public async Task<IActionResult> GetAll()
+    [HttpGet("my")]
+    public async Task<IActionResult> GetMyBooks()
     {
         var userId = GetUserId();
 
@@ -63,26 +63,38 @@ public class BooksController : ControllerBase
     [HttpPut("{id}")]
     public async Task<IActionResult> Update(int id, BookDto dto)
     {
-        var userId = GetUserId();
-
-        await _bookService.UpdateAsync(id, dto, userId);
-
-        return Ok(new
+        try
         {
-            message = "Book updated successfully"
-        });
+            var userId = GetUserId();
+            await _bookService.UpdateAsync(id, dto, userId);
+            return Ok(new { message = "Book updated successfully" });
+        }
+        catch (KeyNotFoundException ex)
+        {
+            return NotFound(new { message = ex.Message });
+        }
+        catch (Exception ex)
+        {
+            return StatusCode(500, new { message = "An error occurred while updating the book.", error = ex.Message });
+        }
     }
 
     [HttpDelete("{id}")]
     public async Task<IActionResult> Delete(int id)
     {
-        var userId = GetUserId();
-
-        await _bookService.DeleteAsync(id, userId);
-
-        return Ok(new
+        try
         {
-            message = "Book deleted successfully"
-        });
+            var userId = GetUserId();
+            await _bookService.DeleteAsync(id, userId);
+            return Ok(new { message = "Book deleted successfully" });
+        }
+        catch (KeyNotFoundException ex)
+        {
+            return StatusCode(403, new { message = "You do not have permission to delete this book, or the book does not exist." });
+        }
+        catch (Exception ex)
+        {
+            return StatusCode(500, new { message = "An error occurred while deleting the book.", error = ex.Message });
+        }
     }
 }

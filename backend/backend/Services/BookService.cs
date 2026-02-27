@@ -36,7 +36,7 @@ namespace backend.Services
         public async Task UpdateAsync(int id, BookDto dto, int userId)
         {
             var book = await _bookRepository.GetByIdAsync(id, userId)
-                       ?? throw new Exception("Book not found");
+                       ?? throw new KeyNotFoundException("Book not found or access denied");
 
             book.Title = dto.Title;
             book.Author = dto.Author;
@@ -49,7 +49,7 @@ namespace backend.Services
         public async Task DeleteAsync(int id, int userId)
         {
             var book = await _bookRepository.GetByIdAsync(id, userId)
-                       ?? throw new Exception("Book not found");
+                       ?? throw new KeyNotFoundException("Book not found or access denied");
 
             await _bookRepository.DeleteAsync(book);
         }
