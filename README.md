@@ -10,13 +10,13 @@ This is a simple Library Management System that allows users to manage books. Us
 - View all book records
 - Update an existing book record
 - Delete a book record
-- Optional: User authentication (if implemented)
+- Optional: User authentication
 
 ---
 
 ## Technology Stack
 - **Backend:** C# .NET, Entity Framework, SQLite
-- **Frontend:** React, TypeScript, HTML, CSS
+- **Frontend:** React, TypeScript, HTML, CSS, Tailwind
 - **Database:** SQLite
 
 ---
