@@ -1,34 +1,46 @@
 # Library Management System
 
-## Overview
-This is a simple Library Management System that allows users to manage books. Users can **create, view, update, and delete** book records. The backend is built with **C# .NET** and SQLite, while the frontend is built with **React and TypeScript**.
+##  Project Overview
+
+The Library Management System is a full-stack web application that allows users to register, log in, and manage books securely.
+
+Users can:
+- Register and log in (JWT Authentication)
+- Create books
+- View books
+- Update books
+- Delete books
+
+The backend is built using **ASP.NET Core Web API** with **Entity Framework Core** and **SQLite**.  
+The frontend is built using **React + TypeScript**.
 
 ---
 
-## Features
-- Create a new book record
-- View all book records
-- Update an existing book record
-- Delete a book record
-- Optional: User authentication (if implemented)
+# Technology Stack
+
+## Backend
+- ASP.NET Core Web API (.NET 7/8)
+- Entity Framework Core
+- SQLite
+- JWT Authentication
+
+## Frontend
+- React
+- TypeScript
+- Axios
+- React Router
 
 ---
 
-## Technology Stack
-- **Backend:** C# .NET, Entity Framework, SQLite
-- **Frontend:** React, TypeScript, HTML, CSS
-- **Database:** SQLite
+# Backend Setup & Run Guide
 
----
+## Prerequisites
 
-## Backend Setup
+Make sure you have installed:
 
-### Prerequisites
-- .NET 7.0 SDK (or latest)
-- Visual Studio / VS Code
+- .NET SDK (7.0 or later)
+- Visual Studio or VS Code
+- EF Core CLI Tools (if not installed):
 
-### Steps to Run
-1. Open the backend folder in Visual Studio or VS Code.
-2. Restore dependencies:
-   ```bash
-   dotnet restore
+```bash
+dotnet tool install --global dotnet-ef
